@@ -1,0 +1,27 @@
+{
+    "name": "markmarco16/yii2-git",
+    "description": "Visualization repositories GIT",
+    "version": "0.1",
+    "type": "yii2-extension",
+    "keywords": [
+        "yii2",
+        "extension",
+        "git",
+        "CVS"
+    ],
+    "homepage": "https://github.com/markmarco16/yii2-git",
+    "authors": [
+        {
+            "name": "Marco Da Silva",
+            "email": "markmarco16@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    }
+    "autoload": {
+        "psr-4": {
+            "markmarco16\\git\\": ""
+        }
+    }
+}
