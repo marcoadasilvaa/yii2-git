@@ -18,8 +18,8 @@
     ],
     "require": {
         "yiisoft/yii2": "*"
-    }
-    "autoload": {
+    },
+    "autoload" {
         "psr-4": {
             "markmarco16\\git\\": ""
         }

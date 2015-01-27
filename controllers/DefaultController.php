@@ -1,12 +1,11 @@
 <?php
 
-//namespace app\modules\git\controllers;
 namespace markmarco16\git\controllers;
 
 use Yii;
-use app\modules\git\components\Repository;
 use yii\web\Controller;
 use yii\data\ArrayDataProvider;
+use markmarco16\git\components\Repository;
 
 class DefaultController extends Controller
 {

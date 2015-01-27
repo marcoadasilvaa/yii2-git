@@ -4,7 +4,6 @@
  */
 
 namespace markmarco16\git\components;
-//namespace app\modules\git\components;
 
 use yii\base\Component;
 use yii\web\NotFoundHttpException;

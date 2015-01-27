@@ -1,8 +1,11 @@
 <?php
 
-namespace app\modules\git;
+namespace markmarco16\git;
 
-class Module extends \yii\base\Module
+use Yii;
+use yii\base\Module;
+
+class Module extends Module
 {
     public $controllerNamespace = 'markmarco16\git\controllers';
 
