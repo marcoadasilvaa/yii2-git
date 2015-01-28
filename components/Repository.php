@@ -34,12 +34,6 @@ class Repository extends Component {
 	//Prefijo de ejecutable GIT
 	public $gitPath = "git";
 
-	//Nombre por defecto remoto
-	public $defaultRemote = 'origin';
-
-	//Nombre por de la rama publica
-	public $defaultBranch = 'desarrollo';
-
 	/**
 	 * Constructor
 	 */
@@ -56,35 +50,33 @@ class Repository extends Component {
 	 */
 	public function setProyectList()
 	{
-		if (is_dir($this->projectPath))
+		if (is_dir($this->projectPath) && ($dh = opendir($this->projectPath)) )
 		{
-    		if ($dh = opendir($this->projectPath)) 
-    		{
-        		while (($file = readdir($dh)) !== false) 
+        	while (($file = readdir($dh)) !== false) 
+        	{
+        		if (filetype($this->projectPath . $file) == "dir")
         		{
-        			if (filetype($this->projectPath . $file) == "dir")
+        			if ($file == '.' or $file == '..') continue;
+        			//!file_exists($realPath."/HEAD"
+        			if (substr($file, -4) == ".git")
         			{
-        				if ($file == '.' or $file == '..') continue;
-        				if (substr($file, -4) == ".git")
-        				{
-        					$this->projectList[] = array_merge(array('dir'=> $file, 
-        						'name' => substr($file, 0,-4),
-        						'path'=>$this->projectPath . $file, 
-        						'description'=> @file_get_contents($this->projectPath.$file.'/description')),
-        						$this->getRevListHashDetail($file,"--all"));
-        				}
-        				else
-        				{
-        					$this->projectList[] = array_merge(array('dir'=> $file, 
-	        					'name' => $file,
-    	    					'path'=>$this->projectPath . $file."/.git", 
-        						'description'=> @file_get_contents($this->projectPath.$file.'/.git/description')),
-        						$this->getRevListHashDetail($file."/.git","--all"));
-        				}
+        				$this->projectList[] = array_merge(array('dir'=> $file, 
+        					'name' => substr($file, 0,-4),
+        					'path'=>$this->projectPath . $file, 
+        					'description'=> @file_get_contents($this->projectPath.$file.'/description')),
+        					$this->getRevListHashDetail($file,"--all"));
+        			}
+        			else
+        			{
+        				$this->projectList[] = array_merge(array('dir'=> $file, 
+	        				'name' => $file,
+    	    				'path'=>$this->projectPath . $file."/.git", 
+        					'description'=> @file_get_contents($this->projectPath.$file.'/.git/description')),
+        					$this->getRevListHashDetail($file."/.git","--all"));
         			}
         		}
-        		closedir($dh);
-    		}
+        	}
+        	closedir($dh);
 		}
 		else 
 			throw new NotFoundHttpException("La ruta base para repositorios GIT: $this->projectPath, no es un directorio o no posee repositorios.");
@@ -148,9 +140,11 @@ class Repository extends Component {
 		}
 		$cmd .= $start;
 
-		$result = array();
+		//scrutinizer code
+		//$result = array();
 		$result = $this->run_git($cmd,$project);
 		
+		//scrutinizer code
 		$commitsList = array();
 		foreach ($result as &$list) 
 		{
@@ -436,18 +430,21 @@ class Repository extends Component {
 				$output['name'] = $matches[1];
 				$output['info'] .= "<pre>".$item."</pre>";
 			}
-			elseif ('new file'===substr($item,0,8))
+			elseif  (('new file'===substr($item,0,8)) || ('old mode'===substr($item,0,8)) || ('new mode'===substr($item,0,8)) || ('deleted file'===substr($item,0,12)) || ('index' === substr($item, 0, 5)))
 				$output['info'] .= "<pre>".$item."</pre>";
+			/*
+			//scrutinizer code
 			elseif ('old mode'===substr($item,0,8))
 				$output['info'] .= "<pre>".$item."</pre>";
 			elseif ('new mode'===substr($item,0,8))
 				$output['info'] .= "<pre>".$item."</pre>";
 			elseif ('deleted file'===substr($item,0,12))
 				$output['info'] .= "<pre>".$item."</pre>";
-			elseif ('Binary files'===substr($item,0,12))
-                $output['contents'][] = array('lineNumOld'=> "-", 'lineNumNew'=> "-", 'lineCode' => "<pre class='chunk'>".$item."</pre>",);
             elseif ('index' === substr($item, 0, 5))
 				$output['info'] .= "<pre>".$item."</pre>";
+			*/
+			elseif ('Binary files'===substr($item,0,12))
+                $output['contents'][] = array('lineNumOld'=> "-", 'lineNumNew'=> "-", 'lineCode' => "<pre class='chunk'>".$item."</pre>",);
             elseif ('@@' === substr($item, 0, 2))
 			{
                 preg_match('/@@ -([0-9]+)/', $item, $matches);

@@ -3,9 +3,8 @@
 namespace markmarco16\git;
 
 use Yii;
-use yii\base\Module;
 
-class Module extends Module
+class Module extends \yii\base\Module
 {
     public $controllerNamespace = 'markmarco16\git\controllers';
 
