@@ -8,11 +8,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('No se que poner', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?= GridView::widget([
         'id' => 'git-grid',
@@ -47,26 +42,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{view} {summary}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                            'title' => Yii::t('app', 'View'),
-                        ]);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view', 'id' => $model["dir"]], ['title' => Yii::t('app', 'Summary')]);
                     },
                     'summary' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                            'title' => Yii::t('app', 'Summary'),
-                        ]);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['graph', 'id' => $model["dir"]], ['title' => Yii::t('app', 'Summary')]);
                     }
                 ],
-                'urlCreator' => function ($action, $model, $key, $index) {
-                    if ($action === 'view') {
-                        $url ='git/view?id='.$model["dir"];
-                        return $url;
-                    }
-                    elseif ($action === 'summary') {
-                        $url ='git/summary?id='.$model["dir"];
-                        return $url;
-                    }
-                }
             ],
         ],
     ]); 

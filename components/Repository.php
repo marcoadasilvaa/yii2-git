@@ -10,8 +10,14 @@ use yii\web\NotFoundHttpException;
 
 class Repository extends Component {
 
-	//Directorio por defecto de los repositorios git
-	public $projectPath = '/home/marcodasilva/Git/';
+	public $cotainer_path = '/home/marcodasilva/Git/';
+	
+	public $repository;
+
+	protected $repository_path;
+	
+	//The list of project in cotainer_path
+	protected $repositories_list = array();
 
 	//Longitud maxima de mensaje resumen
 	protected $subject_max_len = 80;
@@ -22,112 +28,90 @@ class Repository extends Component {
 	//Formato de la fecha larga
 	protected $datetime_full = '%Y-%m-%d %H:%M:%S';
 
-	//The list of project in projectPath
-	protected $projectList = array();
 	
 	//Formato datetime para msg
 	public $datetime_full_msg = 'Y-m-d H:i:s';
 	
-	//Repositorio activo
-	public $project;
 	
 	//Prefijo de ejecutable GIT
 	public $gitPath = "git";
 
 	/**
-	 * Constructor
+	 * Construct
 	 */
-	public function __construct($path = null, $createIfEmpty = false, $initialize = false)
+	public function __construct($repository = null)
 	{
-		if ($path == null)
-			$this->setProyectList();
+		if ($repository == null)
+			$this->setRepositorysList();
 		else
-			$this->setPath($path, $createIfEmpty, $initialize);
+			$this->setRepositoryPath($repository);
 	}
 
 	/**
-	 * Obtiene la lista de repositorios gitr en el directorio base
+	 * Search repositories on the specified path
 	 */
-	public function setProyectList()
+	public function setRepositorysList()
 	{
-		if (is_dir($this->projectPath) && ($dh = opendir($this->projectPath)) )
+		if (is_dir($this->cotainer_path) && ($dh = opendir($this->cotainer_path)) )
 		{
         	while (($file = readdir($dh)) !== false) 
         	{
-        		if (filetype($this->projectPath . $file) == "dir")
+        		if (filetype($this->cotainer_path . $file) == "dir")
         		{
-        			if ($file == '.' or $file == '..') continue;
-        			//!file_exists($realPath."/HEAD"
-        			if (substr($file, -4) == ".git")
+        			if (file_exists($this->cotainer_path.$file."/HEAD"))
         			{
-        				$this->projectList[] = array_merge(array('dir'=> $file, 
+        				$this->repositories_list[] = array_merge(array('dir'=> $file, 
         					'name' => substr($file, 0,-4),
-        					'path'=>$this->projectPath . $file, 
-        					'description'=> @file_get_contents($this->projectPath.$file.'/description')),
-        					$this->getRevListHashDetail($file,"--all"));
+        					'description'=> @file_get_contents($this->cotainer_path.$file.'/description')),
+        					$this->getRevListHashDetail("--all",$file));
         			}
-        			else
+        			elseif (file_exists($this->cotainer_path.$file."/.git/HEAD"))
         			{
-        				$this->projectList[] = array_merge(array('dir'=> $file, 
+        				$this->repositories_list[] = array_merge(array('dir'=> $file, 
 	        				'name' => $file,
-    	    				'path'=>$this->projectPath . $file."/.git", 
-        					'description'=> @file_get_contents($this->projectPath.$file.'/.git/description')),
-        					$this->getRevListHashDetail($file."/.git","--all"));
+        					'description'=> @file_get_contents($this->cotainer_path.$file.'/.git/description')),
+        					$this->getRevListHashDetail("--all",$file."/.git"));
         			}
+        			else 
+        				continue;
         		}
         	}
         	closedir($dh);
 		}
 		else 
-			throw new NotFoundHttpException("La ruta base para repositorios GIT: $this->projectPath, no es un directorio o no posee repositorios.");
+			throw new NotFoundHttpException("La ruta base para repositorios GIT: $this->cotainer_path, no es un directorio o no posee repositorios.");
 	}
 
 	/**
-	 * Retorna los valores del constructor en modo setproyectlist
+	 * return project list
 	 */
-	public function getProyectList()
+	public function getRepositoriesList()
 	{
-    	return $this->projectList;
+    	return $this->repositories_list;
 	}
 
 	/**
 	 * Sets the path to the git repository folder.
 	 */
-	public function setPath($path, $createIfEmpty = false, $initialize = false)
+	public function setRepositoryPath($repository)
 	{
-		if (!($realPath = realpath($this->projectPath.$path))) 
+		$realPath = realpath($this->cotainer_path.$repository); 
+		if ((file_exists($realPath."/HEAD")) || (file_exists($realPath."/.git/HEAD")))
 		{
-			if (!$createIfEmpty) 
-				throw new NotFoundHttpException("La ruta especificada no existe: ".$path);
-			mkdir($path);
-			$realPath = realpath($path);
+			if (file_exists($realPath."/.git/HEAD")) 
+				$realPath .= "/.git/";
+			$this->repository=substr($repository, -4) == ".git"?substr($repository, 0,-4):$repository;
+			$this->repository_path = $realPath;
 		}
-		if (!file_exists($realPath."/HEAD")) 
-		{
-			if ($initialize)
-				$this->initialize();
-			else
-				throw new NotFoundHttpException("La ruta especificada no existe o no es un repositorio git.");
-		}
-		$this->project = $path;
-	}
-
-	/**
-	 * Inicializacion de repositorio
-	 */
-	public function initialize($bare = false)
-	{
-		if (!$bare)
-			//git init --separate-git-dir=. /var/www/mywo
-			return $this->run_git("init");
 		else
-			return $this->run_git("init --bare");
+			throw new NotFoundHttpException("La ruta especificada no existe o no es un repositorio git.");
+
 	}
 
 	/**
 	 * Lists commit objects in reverse chronological order
 	 */
-	public function getRevList($project,$start = 'HEAD', $skip = 0, $max_count = null)
+	public function getRevList($start = 'HEAD', $skip = 0, $max_count = null)
 	{
 		$cmd = "rev-list ";
 		if ($skip != 0) 
@@ -142,13 +126,13 @@ class Repository extends Component {
 
 		//scrutinizer code
 		//$result = array();
-		$result = $this->run_git($cmd,$project);
+		$result = $this->run_git($cmd);
 		
 		//scrutinizer code
 		$commitsList = array();
-		foreach ($result as &$list) 
+		foreach ($result as &$hash) 
 		{
- 		   $commitsList[] = $this->getRevListHashDetail($project,$list);
+ 		   $commitsList[] = $this->getRevListHashDetail($hash);
 		}
 
 		return $commitsList;
@@ -157,7 +141,7 @@ class Repository extends Component {
 	/**
 	 * Obtiene la informacion detallada de un commit
 	 */
-	public function getRevListHashDetail($project,$hash = 'HEAD')
+	public function getRevListHashDetail($hash = 'HEAD',$repository = null)
 	{
 		$pattern = '/^(author|committer) ([^<]+) <([^>]*)> ([0-9]+) (.*)$/';
 
@@ -168,7 +152,7 @@ class Repository extends Component {
 		$info['author_datetime'] = null;
 		$info['parents'] = array();
 		$info['rev'] = $this->getNameRev($hash);
-		$output = $this->run_git("rev-list --date=raw --pretty=format:'tree %T %nparent %P %nauthor %an <%ae> %ad %ncommitter %cn <%ce> %cd %nsubject %s %n%B ' --max-count=1 $hash", $project);
+		$output = $this->run_git("rev-list --date=raw --pretty=format:'tree %T %nparent %P %nauthor %an <%ae> %ad %ncommitter %cn <%ce> %cd %nsubject %s %n%B ' --max-count=1 $hash", $repository);
 		foreach ($output as $line) 
 		{
 			if (substr($line, 0, 7)=='commit ') 
@@ -252,7 +236,7 @@ class Repository extends Component {
 					'hash_file' => $parts[2], 
 					'size'=>$parts[3], 
 					'link'=> array(
-						'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->project, "hash"=>$hash, "hash_file"=>$parts[2])).'">Ver</a>',
+						'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repository_path, "hash"=>$hash, "hash_file"=>$parts[2])).'">Ver</a>',
 						'<a href="'.Yii::app()->createUrl("repositorio/commitview",array("id"=>$this->project, "hash"=>$hash, "hash_file"=>$parts[2])).'">Comparar</a>',
 					),
 				);
@@ -277,7 +261,7 @@ class Repository extends Component {
 				'hash_file' => $parts[2], 
 				'size'=>$parts[3],
 				'link'=> array(
-					'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->project, "hash"=>$hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2])).'">Ver</a>',
+					'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repository_path, "hash"=>$hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2])).'">Ver</a>',
 				),
 
 			);
@@ -299,7 +283,7 @@ class Repository extends Component {
 				$cmd .= " --heads";
 		}
 		$result = array();
-		$output = $this->run_git($cmd,$project);
+		$output = $this->run_git($cmd,$repository_path);
 		foreach ($output as $line) 
 		{
 			// <hash> <ref>
@@ -347,36 +331,6 @@ class Repository extends Component {
 				$result .= "<br><span class='GIT".$item['type']."'>".$item['name']."</span>";
 		}
 		return $result;
-	}
-
-	/**
-	 * Gets an array of paths that have differences between the index file and the current HEAD commit
-	 */
-	public function status()
-	{
-		$files = array();
-		$output = $this->run_git("status -s --untracked-files=all ");
-		if (empty($output)) 
-			return $files;
-
-		$search = array(' M',' A',' D',' R',' C',' U','??','!!');
-		$replace = array('Modificado','Agregado','Eliminado','Renombrado','Copiado','Actualizado, pero sin combinar','Sin Seguimiento (Nuevo)','Ignorado');
-		/*
-		Only validate position Y
-			M = modified
-			A = added
-			D = deleted
-			R = renamed
-			C = copied
-			U = updated but unmerged
-			?? = untracked
-			!! = ignored
-		*/
-		foreach ($output as $item) 
-		{
-			$files[] = array('status'=>substr($item,0,2), 'name'=>substr($item,3), 'description'=>str_replace($search, $replace, substr($item,0,2)),);
-		}
-		return $files;
 	}
 
 	/**
@@ -631,12 +585,12 @@ class Repository extends Component {
 	public function getHooks()
 	{
 		$Hooks = array();
-		if ($dh = opendir($this->projectPath.$this->project."/hooks/")) 
+		if ($dh = opendir($this->cotainer_path.$this->project."/hooks/")) 
     	{
         	while (($file = readdir($dh)) !== false) 
         	{
         		if (($file !=='.') && ($file !=='..')) {
-        			$Hooks[] = array('name' => $file, 'contents'=> @file_get_contents($this->projectPath.$this->project.'/hooks/'.$file));
+        			$Hooks[] = array('name' => $file, 'contents'=> @file_get_contents($this->cotainer_path.$this->repository_path.'/hooks/'.$file));
         		}
         	}
         	closedir($dh);
@@ -675,27 +629,16 @@ class Repository extends Component {
         return $key;
     }
 
-   	/**
-	 * Obtener el directorio actual de trabajo
-	 */
-	public function getPath()
-	{
-		if (empty($this->project))
-			return $this->projectPath;
-		else
-			return $this->projectPath.$this->project;
-	}
-
 	/**
 	 * Execute comands git
 	 */
-	protected function run_git($command, $project = null)
+	protected function run_git($command, $repository = null)
 	{
 		$output = array();
-		if ($project == null) 
-			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->getPath())." $command";
+		if ($repository == null) 
+			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->repository_path)." $command";
 		else
-			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->projectPath . $project) ." $command";
+			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainer_path . $repository) ." $command";
 		$ret = 0;
 		exec($cmd, $output, $ret);
 		return $output;
@@ -704,20 +647,20 @@ class Repository extends Component {
 	/**
 	 * Runs a git command and returns the response
 	 */
-	protected function run($command,$project = null)
+	protected function run($command,$repository_path = null)
 	{
 		$descriptor = array(
 			1 => array('pipe', 'w'),
 			2 => array('pipe', 'w'),
 		);
 		$pipes = array();
-		if ($project == null) 
-			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->getPath())." $command";
+		if ($repository_path == null) 
+			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->repository_path)." $command";
 		else
-			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->projectPath . $project) ." $command";
+			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainer_path . $repository_path) ." $command";
 
 
-		$resource = proc_open($cmd,$descriptor,$pipes,$this->getPath());
+		$resource = proc_open($cmd,$descriptor,$pipes,$this->repository_path);
 		$stdout = stream_get_contents($pipes[1]);
 		$stderr = stream_get_contents($pipes[2]);
 		foreach($pipes as $pipe) {
