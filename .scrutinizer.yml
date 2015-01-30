@@ -3,6 +3,5 @@ imports:
 
 tools:
     external_code_coverage: true
-        timeout: 2100 # Timeout in seconds.
     php_sim: false
     php_cpd: false
