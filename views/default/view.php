@@ -9,17 +9,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-<span><?= Html::a('Gráfica', ['graph'], ['graph', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
-<span><?= Html::a('Estadisticas', ['stats'], ['stats', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
-<span><?= Html::a('Configuración', ['config'], ['config', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
+    <span><?= Html::a('Gráfica', ['graph'], ['graph', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
+    <span><?= Html::a('Estadisticas', ['stats'], ['stats', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
+    <span><?= Html::a('Configuración', ['config'], ['config', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
 </p>
  
 <h1><?= Html::encode($this->title) ?></h1>
 
-<h2>Versiones</h2>
+<h2>Commits</h2>
 
     <?= GridView::widget([
-        'id' => 'git-grid',
+        'id' => 'commit-grid',
         'dataProvider' => $providerRevList,
         'columns' => [
             [
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'h',
                 'format' => 'html',
                 'label' => 'Código Versión',
-                "value" => function($data){
+                'value' => function($data){
                     return substr($data['h'], 0, 7).$data['rev'];
                 }
             ],
@@ -36,7 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'author_datetime',
                 'format' => ['datetime', 'php:m/d/Y H:i:s'],
                 'label' => 'Fecha',
-
             ],
             [
                 'class' => 'yii\grid\DataColumn',
@@ -57,6 +56,88 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{view}',
                 'buttons' => [
                     'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
+                            ['commit', 'id' => $git->repository, 'hash' => '$data["h"]'], 
+                            ['title' => Yii::t('app', 'Detail')]);
+                    },
+                ],
+            ],
+        ],
+    ]); 
+?>
+
+<h2>Tags</h2>
+
+    <?= GridView::widget([
+        'id' => 'tags-grid',
+        'dataProvider' => $providerTags,
+        'columns' => [
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => 'tag',
+                'label' => 'Etiqueta',
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => 'h',
+                'format' => 'html',
+                'label' => 'Código Versión',
+                'value' => function($data){
+                    return substr($data['h'], 0, 7);
+                }
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => 'datetime',
+                'format' => ['datetime', 'php:m/d/Y H:i:s'],
+                'label' => 'Fecha',
+
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => 'message_short',
+                'format' => 'html',
+                'label' => 'Mensaje',
+            ],
+            ['class' => 'yii\grid\ActionColumn',
+                'template'=>'{view}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        //'url'=>'Yii::app()->createUrl("repositorio/tagview",array("id"=>'.escapeshellarg($git->project).',"tag"=>$data["tag"]))',
+                        //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['commit', 'id' => $git->repository, 'hash' => $model["h"]], ['title' => Yii::t('app', 'Detail')]);
+                    },
+                ],
+            ],
+        ],
+    ]); 
+
+
+?>
+
+<h2>Branches</h2>
+
+    <?= GridView::widget([
+        'id' => 'branches-grid',
+        'dataProvider' => $providerBranches,
+        'columns' => [
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => 'branch',
+                'label' => 'Rama',
+            ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => 'active',
+                'label' => 'Estatus',
+                "value" => function($data){
+                    return $data['active']?"Activo":"";
+                }
+            ],
+            ['class' => 'yii\grid\ActionColumn',
+                'template'=>'{view}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        //'url'=>'Yii::app()->createUrl("repositorio/shortlog",array("id"=>'.escapeshellarg($git->project).',"branch"=>$data["branch"]))',                    
                         //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['commit', 'id' => $git->repository, 'hash' => $model["h"]], ['title' => Yii::t('app', 'Detail')]);
                     },
                 ],
