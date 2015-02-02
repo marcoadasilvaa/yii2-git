@@ -1,13 +1,1 @@
-imports:
-    - php
 
-tools:
-    php_sim: false
-    php_cpd: false
-    php_pdepend: false
-    php_cs_fixer: false
-    php_changetracking:
-        enabled: false
-
-    external_code_coverage:
-        timeout: 3000
