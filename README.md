@@ -12,6 +12,8 @@ En desarrollo...
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/markmarco16/yii2-git/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/markmarco16/yii2-git/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/markmarco16/yii2-git/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/markmarco16/yii2-git/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/markmarco16/yii2-git/badges/build.png?b=master)](https://scrutinizer-ci.com/g/markmarco16/yii2-git/build-status/master)
+[![Dependency Status](https://www.versioneye.com/user/projects/54cfb7793ca0840b19000002/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54cfb7793ca0840b19000002)
+[![Code Climate](https://codeclimate.com/github/markmarco16/yii2-git/badges/gpa.svg)](https://codeclimate.com/github/markmarco16/yii2-git)
 
 
 ## Instalación
