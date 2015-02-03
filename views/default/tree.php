@@ -3,25 +3,26 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-$this->title = 'Commit: '.substr($hash, 0, 7);
+$this->title = 'Tree';
 $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => substr($git->repository, -4) == ".git"?substr($git->repository, 0,-4):$git->repository, 'url' => ['view', 'id'=>$git->repository]];
+$this->params['breadcrumbs'][] = ['label' => 'Commit: '.substr($hash, 0, 7), 'url' =>['commitview', 'id'=>$git->repository, 'hash'=>$hash]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= DetailView::widget([
-    	'model' => $changed,
+        'model' => $commit,
         'attributes' => [
             [                   
                 'label' => 'Commit',
-                'value' => $changed["h"],
+                'value' => $commit["h"],
             ],
-            [
-            	'label' => 'Ref',
-                'format' => 'raw',
-                'value' => empty($changed["rev"])?"Nothing":strip_tags($changed["rev"], '<span>'),
+            [                   
+                'label' => 'Ref',
+                'format' => 'html',
+                'value'=> empty($commit["rev"])?"Nothing":strip_tags($commit["rev"], '<span>'),
             ],
             [                   
                 'label' => 'Author Datetime',
@@ -51,27 +52,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Message',
                 'format' => 'html',
                 'name' => 'message',
-                'value' => '<p>'.$changed["message"].'</p>',
+                'value' => '<p>'.$commit["message"].'</p>',
             ],
             [                   
                 'label' => 'Files',
                 'name' => 'tree',
                 'format' => 'html',
-                'value' => Html::a('<span class="">'.$changed["tree"].'</span>', 
-                	['tree', 'id' => $git->repository, "hash"=>$changed["h"], "tree"=>$changed["tree"]], 
-                	['title' => Yii::t('app', 'Summary')]),
+                'value' => Html::a('<span class="">'.$commit["tree"].'</span>', 
+                    ['tree', 'id' => $git->repository, "hash"=>$commit["h"], "tree"=>$commit["tree"]], 
+                    ['title' => Yii::t('app', 'Summary')]),
             ],
             [                   
                 'label' => 'Parent(s)',
                 'format' => 'html',
-                'value' => implode("<br>", $changed["parents"]),
+                'value' => implode("<br>", $commit["parents"]),
             ],
         ],
     ]);
-
-    echo yii\base\View::render('_files', array('providerFiles'=>$providerFiles));
-
-    if (!empty($files_change)) {
-        echo yii\base\View::render('_diff', array('files_change'=>$files_change));
-    } 
+ 
+    echo yii\base\View::render('_files', array('providerFiles' => $providerFiles)); 
 ?>

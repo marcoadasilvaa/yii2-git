@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 $this->title = substr($git->repository, -4) == ".git"?substr($git->repository, 0,-4):$git->repository;
-$this->params['breadcrumbs'][] = "Repositorios";
+$this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

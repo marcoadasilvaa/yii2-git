@@ -148,7 +148,7 @@ class Repository extends Component {
 				$info['tree'] = substr($line, 5);
 			} elseif (substr($line, 0, 6) === 'parent') {
 				foreach (explode(" ", substr($line, 7)) as $item) {
-					$info['parents'][] = Html::a('<span class="">$item</span>', 
+					$info['parents'][] = Html::a('<span class="">'.$item.'</span>', 
 							["commitview", 'id' => $this->repository, 'hash' => $item],
 						    ['title' => Yii::t('app', 'Detail')]
 						);
@@ -235,7 +235,11 @@ class Repository extends Component {
 				'hash_file' => $parts[2], 
 				'size'=>$parts[3],
 				'link'=> array(
-					'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repository_path, "hash"=>$hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2])).'">Ver</a>',
+					Html::a('<span class="">View</span>', 
+							[$parts[1], 'id' => $this->repository, 'hash' => $hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2]],
+						    ['title' => Yii::t('app', 'Detail')]
+						),
+					//'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repository_path, "hash"=>$hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2])).'">Ver</a>',
 				),
 
 			);

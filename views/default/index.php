@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-$this->title = 'Visualización de Repositorios';
+$this->title = 'Repositories View';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

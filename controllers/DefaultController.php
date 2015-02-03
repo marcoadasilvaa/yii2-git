@@ -21,15 +21,14 @@ class DefaultController extends Controller
         		'pageSize' => 10,
     		],
 		]);
-        return $this->render('index',array('git'=>$git,'dataProvider'=>$provider));
+        return $this->render('index', array('git'=>$git, 'dataProvider'=>$provider));
     }
 
     public function actionView($id)
     {
         $git = new Repository($id);
-
         $providerRevList = new ArrayDataProvider([
-            'allModels' => $git->getRevList("--all",0,200),
+            'allModels' => $git->getRevList("--all", 0, 200),
             'sort' => [
                 'attributes' => ['author_name', 'author_datetime'],
             ],
@@ -55,7 +54,7 @@ class DefaultController extends Controller
                 'pageSize' => 25,
             ],
         ]);
-        return $this->render('view',array('git'=>$git, 'providerRevList'=>$providerRevList, 'providerTags'=>$providerTags, 'providerBranches'=>$providerBranches));
+        return $this->render('view',array('git' => $git, 'providerRevList' => $providerRevList, 'providerTags' => $providerTags, 'providerBranches' => $providerBranches));
     }
 
     public function actionGraph($id)
@@ -71,7 +70,7 @@ class DefaultController extends Controller
         $providerFiles = new ArrayDataProvider([
             'allModels' => $git->getChangedPaths($hash),
             'sort' => [
-                'attributes' => ['branch', 'active'],
+                'attributes' => ['hash_file', 'name', 'type', 'mode', 'size', 'link'],
             ],
             'pagination' => false,
         ]);
@@ -79,6 +78,28 @@ class DefaultController extends Controller
         if (!($hash_file == null)) {
                 $files_change = $git->showDiffPath($hash,$_GET['hash_file']);
         }
-        return $this->render('commitview',array('git'=>$git, 'hash'=>$hash, 'changed'=>$changed, 'files_change'=>$files_change, 'providerFiles'=>$providerFiles));
+        return $this->render('commitview',array('git' => $git, 'hash' => $hash, 'changed' => $changed, 'files_change' => $files_change, 'providerFiles' => $providerFiles));
+    }
+
+    public function actionBlob($id,$hash,$hash_file)
+    {
+        $git = new Repository($id);
+        $commit = $git->getRevListHashDetail($hash);
+        $file = $git->showBlobFile($hash_file);
+        return $this->render('blob', array('git' => $git, 'hash' => $hash, 'hash_file' => $hash_file, 'file' => $file, 'commit' => $commit));
+    }
+
+    public function actionTree($id, $hash, $tree)
+    {
+        $git = new Repository ($id);
+        $commit = $git->getRevListHashDetail($hash);
+        $providerFiles = new ArrayDataProvider([
+            'allModels' => $git->getTree($tree,$hash),
+            'sort' => [
+                'attributes' => ['hash_file', 'name', 'type', 'mode', 'size', 'link'],
+            ],
+            'pagination' => false,
+        ]);
+        return $this->render('tree', array('git' => $git, 'hash' => $hash, 'commit' => $commit, 'providerFiles' => $providerFiles));
     }
 }

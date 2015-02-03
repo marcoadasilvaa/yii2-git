@@ -62,3 +62,5 @@ Configura este módulo en la configuracion de tu aplicación Yii
 * Exportar style para diff view.
 * Estables como parametros el directorio raiz de los repositorios.
 * Posible migración de table a GridView de _diff view.
+* Optimizar ArrayDataProvider de getRevList.
+* Visualización de archivos binarios como PNG.

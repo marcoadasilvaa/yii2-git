@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 ?>
 
-<?= GridView::widget([
+    <?= GridView::widget([
         'id' => 'files-grid',
         'dataProvider' => $providerFiles,
         'columns' => [
@@ -41,7 +41,7 @@ use yii\grid\GridView;
                 'attribute' => 'link',
                 'value' => function ($data){
                         return implode(" ", $data["link"]);
-                },
+                }
             ],
         ],
     ]); 
