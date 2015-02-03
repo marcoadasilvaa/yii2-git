@@ -130,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'active',
                 'label' => 'Estatus',
-                "value" => function($data){
+                'value' => function($data){
                     return $data['active']?"Activo":"";
                 }
             ],

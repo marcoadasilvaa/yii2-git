@@ -46,8 +46,7 @@ class DefaultController extends Controller
                 'pageSize' => 25,
             ],
         ]);
-
-         $providerBranches = new ArrayDataProvider([
+        $providerBranches = new ArrayDataProvider([
             'allModels' => $git->getBranches(),
             'sort' => [
                 'attributes' => ['branch', 'active'],
@@ -69,16 +68,17 @@ class DefaultController extends Controller
     {
         $git = new Repository($id);
         $changed = $git->getRevListHashDetail($hash);
-        var_dump($hash);
-        var_dump($changed);
-        die();
-        $files['title']="Archivos Afectados";
-        $files['content']=$git->getChangedPaths($hash);
+        $providerFiles = new ArrayDataProvider([
+            'allModels' => $git->getChangedPaths($hash),
+            'sort' => [
+                'attributes' => ['branch', 'active'],
+            ],
+            'pagination' => false,
+        ]);
         $files_change = null;
-        if (!empty($_GET['hash_file'])) {
-                //verificar el hash antes de enviar
+        if (!($hash_file == null)) {
                 $files_change = $git->showDiffPath($hash,$_GET['hash_file']);
         }
-        return $this->render('commitview',array('git'=>$git, 'hash'=>$hash, 'changed'=>$changed, 'files'=>$files, 'files_change'=>$files_change));
+        return $this->render('commitview',array('git'=>$git, 'hash'=>$hash, 'changed'=>$changed, 'files_change'=>$files_change, 'providerFiles'=>$providerFiles));
     }
 }

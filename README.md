@@ -51,3 +51,14 @@ Configura este módulo en la configuracion de tu aplicación Yii
     ],
     ......
 ```
+
+
+## Requerimientos
+
+* Verificar datetime local de los Commits.
+* Iconos en el view _file y el titulo de la tabla.
+* Verificar de los hash commit y files antes de se empleados en el component.
+* Iconos en el view para graficas, estadisticas y configuraciones.
+* Exportar style para diff view.
+* Estables como parametros el directorio raiz de los repositorios.
+* Posible migración de table a GridView de _diff view.

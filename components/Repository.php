@@ -7,6 +7,8 @@ namespace markmarco16\git\components;
 
 use yii\base\Component;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Html;
+use Yii;
 
 class Repository extends Component {
 
@@ -97,7 +99,7 @@ class Repository extends Component {
 		$realPath = realpath($this->cotainer_path.$repository); 
 		if ((file_exists($realPath."/HEAD")) || (file_exists($realPath."/.git/HEAD"))) {
 			if (file_exists($realPath."/.git/HEAD")) 
-				$realPath .= "/.git/";
+				$realPath .= "/.git";
 			$this->repository=substr($repository, -4) == ".git"?substr($repository, 0,-4):$repository;
 			$this->repository_path = $realPath;
 		} else {
@@ -146,8 +148,10 @@ class Repository extends Component {
 				$info['tree'] = substr($line, 5);
 			} elseif (substr($line, 0, 6) === 'parent') {
 				foreach (explode(" ", substr($line, 7)) as $item) {
-					//Corregir Crear URL
-					//$info['parents'][] = '<a href="'.Yii::app()->createUrl("repositorio/commitview",array("id"=>$this->project, "hash"=>$item)).'">'.$item.'</a>';
+					$info['parents'][] = Html::a('<span class="">$item</span>', 
+							["commitview", 'id' => $this->repository, 'hash' => $item],
+						    ['title' => Yii::t('app', 'Detail')]
+						);
 				}
 			} elseif (preg_match($pattern, $line, $matches) > 0) {
 				$info[$matches[1] .'_name'] = $matches[2];
@@ -201,8 +205,14 @@ class Repository extends Component {
 					'hash_file' => $parts[2], 
 					'size'=>$parts[3], 
 					'link'=> array(
-						'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repository_path, "hash"=>$hash, "hash_file"=>$parts[2])).'">Ver</a>',
-						'<a href="'.Yii::app()->createUrl("repositorio/commitview",array("id"=>$this->project, "hash"=>$hash, "hash_file"=>$parts[2])).'">Comparar</a>',
+						Html::a('<span class="">View</span>', 
+							[$parts[1], 'id' => $this->repository, 'hash' => $hash, "hash_file"=>$parts[2]],
+						    ['title' => Yii::t('app', 'Detail')]
+						),
+						Html::a('<span class="">Compare</span>', 
+							["commitview", 'id' => $this->repository, 'hash' => $hash, "hash_file"=>$parts[2]],
+						    ['title' => Yii::t('app', 'Detail')]
+						),
 					),
 				);
 			}
@@ -553,7 +563,6 @@ class Repository extends Component {
 		} else {
 			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainer_path . $repository) ." $command";
 		}
-		var_dump($cmd);
 		$ret = 0;
 		exec($cmd, $output, $ret);
 		return $output;
