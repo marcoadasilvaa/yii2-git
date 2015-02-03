@@ -293,7 +293,7 @@ class Repository extends Component {
 		$path = $this->showNameHashFile($hash_file);
 		$output = $this->run_git("diff $hash^..$hash -- '$path'");
 		if (empty($output)) {
-			throw new MGitException("No se puede mostrar los detalles del archivo: '$path' ($hash_file), en la versión: $hash. Favor notifique al administrador.");
+			throw new NotFoundHttpException("No se puede mostrar los detalles del archivo: '$path' ($hash_file), en la versión: $hash. Favor notifique al administrador.");
 		} else {
 			return $this->formatDiff($output);
 		}
@@ -553,6 +553,7 @@ class Repository extends Component {
 		} else {
 			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainer_path . $repository) ." $command";
 		}
+		var_dump($cmd);
 		$ret = 0;
 		exec($cmd, $output, $ret);
 		return $output;

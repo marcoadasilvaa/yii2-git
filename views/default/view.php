@@ -52,12 +52,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'subject',
                 'label' => 'Descripción',
             ],
-            ['class' => 'yii\grid\ActionColumn',
+            [
+                'class' => 'yii\grid\ActionColumn',
                 'template'=>'{view}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
+                    'view' => function ($url, $model) use ($git) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
-                            ['commit', 'id' => $git->repository, 'hash' => '$data["h"]'], 
+                            ['commitview', 'id' => $git->repository, 'hash' => $model["h"]], 
                             ['title' => Yii::t('app', 'Detail')]);
                     },
                 ],
@@ -99,19 +100,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'html',
                 'label' => 'Mensaje',
             ],
-            ['class' => 'yii\grid\ActionColumn',
+            [
+                'class' => 'yii\grid\ActionColumn',
                 'template'=>'{view}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
-                        //'url'=>'Yii::app()->createUrl("repositorio/tagview",array("id"=>'.escapeshellarg($git->project).',"tag"=>$data["tag"]))',
-                        //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['commit', 'id' => $git->repository, 'hash' => $model["h"]], ['title' => Yii::t('app', 'Detail')]);
+                    'view' => function ($url, $model) use ($git) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
+                            ['tagview', 'id' => $git->repository, 'tag' => $model["tag"]], 
+                            ['title' => Yii::t('app', 'Detail')]);
                     },
                 ],
             ],
         ],
     ]); 
-
-
 ?>
 
 <h2>Branches</h2>
@@ -133,12 +134,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data['active']?"Activo":"";
                 }
             ],
-            ['class' => 'yii\grid\ActionColumn',
+            [
+                'class' => 'yii\grid\ActionColumn',
                 'template'=>'{view}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
-                        //'url'=>'Yii::app()->createUrl("repositorio/shortlog",array("id"=>'.escapeshellarg($git->project).',"branch"=>$data["branch"]))',                    
-                        //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['commit', 'id' => $git->repository, 'hash' => $model["h"]], ['title' => Yii::t('app', 'Detail')]);
+                    'view' => function ($url, $model) use ($git) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
+                            ['shortlog', 'id' => $git->repository, 'branch' => $model["branch"]], 
+                            ['title' => Yii::t('app', 'Detail')]);
                     },
                 ],
             ],

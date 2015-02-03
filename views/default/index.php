@@ -38,7 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'html',
                 'label' => 'Último Mensaje',
             ],
-            ['class' => 'yii\grid\ActionColumn',
+            [
+                'class' => 'yii\grid\ActionColumn',
                 'template'=>'{view} {summary}',
                 'buttons' => [
                     'view' => function ($url, $model) {
