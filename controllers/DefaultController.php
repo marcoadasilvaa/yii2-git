@@ -76,7 +76,7 @@ class DefaultController extends Controller
         ]);
         $files_change = null;
         if (!($hash_file == null)) {
-                $files_change = $git->showDiffPath($hash,$_GET['hash_file']);
+                $files_change = $git->showDiffPath($hash, $hash_file);
         }
         return $this->render('commitview',array('git' => $git, 'hash' => $hash, 'changed' => $changed, 'files_change' => $files_change, 'providerFiles' => $providerFiles));
     }

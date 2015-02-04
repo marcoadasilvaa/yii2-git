@@ -40,13 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template'=>'{view} {summary}',
+                'template'=>'{view} {graph}',
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view', 'id' => $model["dir"]], ['title' => Yii::t('app', 'Summary')]);
                     },
-                    'summary' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['graph', 'id' => $model["dir"]], ['title' => Yii::t('app', 'Summary')]);
+                    'graph' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['graph', 'id' => $model["dir"]], ['title' => Yii::t('app', 'Graph')]);
                     }
                 ],
             ],

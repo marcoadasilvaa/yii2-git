@@ -3,15 +3,15 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-$this->title = substr($git->repository, -4) == ".git"?substr($git->repository, 0,-4):$git->repository;
+$this->title = substr($git->repository, -4) == ".git"?substr($git->repository, 0, -4):$git->repository;
 $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-    <span><?= Html::a('Gráfica', ['graph'], ['graph', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
-    <span><?= Html::a('Estadisticas', ['stats'], ['stats', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
-    <span><?= Html::a('Configuración', ['config'], ['config', 'id' => $git->repository],['class' => 'btn btn-success']) ?></span>
+    <span><?= Html::a('Gráfica', ['graph'], ['graph', 'id' => $git->repository], ['class' => 'btn btn-success']) ?></span>
+    <span><?= Html::a('Estadisticas', ['stats'], ['stats', 'id' => $git->repository], ['class' => 'btn btn-success']) ?></span>
+    <span><?= Html::a('Configuración', ['config'], ['config', 'id' => $git->repository], ['class' => 'btn btn-success']) ?></span>
 </p>
  
 <h1><?= Html::encode($this->title) ?></h1>
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'h',
                 'format' => 'html',
                 'label' => 'Código Versión',
-                'value' => function($data){
+                'value' => function($data) {
                     return substr($data['h'], 0, 7).$data['rev'];
                 }
             ],
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) use ($git) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
                             ['commitview', 'id' => $git->repository, 'hash' => $model["h"]], 
-                            ['title' => Yii::t('app', 'Detail')]);
+                            ['title' => Yii::t('app', 'View commit ' . substr($model['h'], 0, 7))]);
                     },
                 ],
             ],

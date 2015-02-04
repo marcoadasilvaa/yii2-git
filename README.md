@@ -64,3 +64,4 @@ Configura este módulo en la configuracion de tu aplicación Yii
 * Posible migración de table a GridView de _diff view.
 * Optimizar ArrayDataProvider de getRevList.
 * Visualización de archivos binarios como PNG.
+* Modificar Enlaces Yii::t, Html::a
