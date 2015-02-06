@@ -252,7 +252,7 @@ class Repository extends Component {
 				$cmd .= " --heads";
 		}
 		$result = array();
-		$output = $this->run_git($cmd,$repositoryPath);
+		$output = $this->run_git($cmd,$project);
 		foreach ($output as $line) {
 			// <hash> <ref>
 			$parts = explode(' ', $line, 2);
@@ -464,7 +464,7 @@ class Repository extends Component {
 				$tags['message'] .= $line.'<br>';
 			}
 		}
-		$tags['message_short'] =  strlen($tags['message'])>=$this->subjectMaxLength?substr($tags['message'],0,$this->subject_max_len).'...':$tags['message'];
+		$tags['message_short'] =  strlen($tags['message'])>=$this->subjectMaxLength?substr($tags['message'],0,$this->subjectMaxLength).'...':$tags['message'];
 		return $tags;
 	}
 	

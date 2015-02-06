@@ -17,12 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             [                   
                 'label' => 'Commit',
-                'value' => $commit["h"],
+                'attribute' => 'h'
             ],
             [                   
                 'label' => 'Ref',
                 'format' => 'html',
-                'value'=> empty($commit["rev"])?"Nothing":strip_tags($commit["rev"], '<span>'),
+                'value'=> empty($data["rev"])?"Nothing":strip_tags($data["rev"], '<span>'),
             ],
             [                   
                 'label' => 'Author Datetime',
@@ -52,20 +52,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Message',
                 'format' => 'html',
                 'name' => 'message',
-                'value' => '<p>'.$commit["message"].'</p>',
+                'value' => '<p>'.$data["message"].'</p>',
             ],
             [                   
                 'label' => 'Files',
                 'name' => 'tree',
                 'format' => 'html',
-                'value' => Html::a('<span class="">'.$commit["tree"].'</span>', 
-                	['tree', 'id' => $git->repository, "hash"=>$commit["h"], "tree"=>$commit["tree"]], 
+                'value' => Html::a('<span class="">' . $data["tree"] . '</span>', 
+                	['tree', 'id' => $git->repository, "hash" => $data["h"], "tree" => $data["tree"]], 
                 	['title' => Yii::t('app', 'Summary')]),
             ],
             [                   
                 'label' => 'Parent(s)',
                 'format' => 'html',
-                'value' => implode("<br>", $commit["parents"]),
+                'value' => implode("<br>", $data["parents"]),
             ],
        	],
     ]);
@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="source-view">
     	<div class="source-header">
-    		<div class="meta"><?php echo $file['name'];?></div>
+    		<div class="meta"><?php echo $file['name']; ?></div>
     		<div class="btn-group pull-right"></div>
     	</div>
     	<div>
