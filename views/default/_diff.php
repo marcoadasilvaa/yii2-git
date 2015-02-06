@@ -1,5 +1,5 @@
-<div class="source-view">
-	<div class="source-header">
+<div class="git-source-view">
+	<div class="git-source-header">
 		<div class="meta"><?php echo $files_change['name'];?></div>
 			<div class="btn-group pull-right"></div>
 	</div>

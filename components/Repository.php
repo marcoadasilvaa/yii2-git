@@ -12,27 +12,20 @@ use Yii;
 
 class Repository extends Component {
 
-	public $cotainer_path = '/home/marcodasilva/Git/';
+	public $cotainerPath = '/home/marcodasilva/Git/';
 	
 	public $repository;
 
-	protected $repository_path;
+	protected $repositoryPath;
 	
-	//The list of project in cotainer_path
-	protected $repositories_list = array();
+	//The list of project in cotainerPath
+	protected $repositoriesList = array();
 
 	//Longitud maxima de mensaje resumen
-	protected $subject_max_len = 80;
+	protected $subjectMaxLength = 80;
 
 	//Formato de la fecha corta
-	protected $datetime = '%Y-%m-%d %H:%M';
-	
-	//Formato de la fecha larga
-	protected $datetime_full = '%Y-%m-%d %H:%M:%S';
-
-	
-	//Formato datetime para msg
-	public $datetime_full_msg = 'Y-m-d H:i:s';
+	protected $datetimeFormat = '%Y-%m-%d %H:%M';
 	
 	
 	//Prefijo de ejecutable GIT
@@ -43,7 +36,7 @@ class Repository extends Component {
 	 */
 	public function __construct($repository = null)	{
 		if ($repository == null) {
-			$this->setRepositorysList();
+			$this->setRepositoryList();
 		} else {
 			$this->setRepositoryPath($repository);
 		}
@@ -52,25 +45,25 @@ class Repository extends Component {
 	/**
 	 * Search repositories on the specified path
 	 */
-	public function setRepositorysList() {
-		if (is_dir($this->cotainer_path) && ($dh = opendir($this->cotainer_path))) {
-        	while (($file = readdir($dh)) !== false) {
-        		if (filetype($this->cotainer_path . $file) == "dir") {
-        			if (file_exists($this->cotainer_path.$file."/HEAD")) {
-        				$this->repositories_list[] = array_merge(
+	public function setRepositoryList() {
+		if (is_dir($this->cotainerPath) && ($dir = opendir($this->cotainerPath))) {
+        	while (($file = readdir($dir)) !== false) {
+        		if (filetype($this->cotainerPath . $file) == "dir") {
+        			if (file_exists($this->cotainerPath.$file."/HEAD")) {
+        				$this->repositoriesList[] = array_merge(
         					array(
         						'dir'=> $file, 
         						'name' => substr($file, 0,-4),
-        						'description'=> @file_get_contents($this->cotainer_path.$file.'/description')
+        						'description'=> file_get_contents($this->cotainerPath.$file.'/description')
         					),
         					$this->getRevListHashDetail("--all",$file)
         				);
-        			} elseif (file_exists($this->cotainer_path.$file."/.git/HEAD")) {
-        				$this->repositories_list[] = array_merge(
+        			} elseif (file_exists($this->cotainerPath.$file."/.git/HEAD")) {
+        				$this->repositoriesList[] = array_merge(
         					array(
         						'dir'=> $file, 
 	        					'name' => $file,
-        						'description'=> @file_get_contents($this->cotainer_path.$file.'/.git/description')
+        						'description'=> file_get_contents($this->cotainerPath.$file.'/.git/description')
         					),
         					$this->getRevListHashDetail("--all",$file."/.git")
         				);
@@ -79,9 +72,9 @@ class Repository extends Component {
         			}
         		}
         	}
-        	closedir($dh);
+        	closedir($dir);
 		} else {
-			throw new NotFoundHttpException("La ruta base para repositorios GIT: $this->cotainer_path, no es un directorio o no posee repositorios.");
+			throw new NotFoundHttpException("La ruta base para repositorios GIT: $this->cotainerPath, no es un directorio o no posee repositorios.");
 		}
 	}
 
@@ -89,19 +82,19 @@ class Repository extends Component {
 	 * return project list
 	 */
 	public function getRepositoriesList() {
-    	return $this->repositories_list;
+    	return $this->repositoriesList;
 	}
 
 	/**
 	 * Sets the path to the git repository folder.
 	 */
 	public function setRepositoryPath($repository) {
-		$realPath = realpath($this->cotainer_path.$repository); 
+		$realPath = realpath($this->cotainerPath.$repository); 
 		if ((file_exists($realPath."/HEAD")) || (file_exists($realPath."/.git/HEAD"))) {
 			if (file_exists($realPath."/.git/HEAD")) 
 				$realPath .= "/.git";
-			$this->repository=substr($repository, -4) == ".git"?substr($repository, 0,-4):$repository;
-			$this->repository_path = $realPath;
+			$this->repository=$repository;
+			$this->repositoryPath = $realPath;
 		} else {
 			throw new NotFoundHttpException("La ruta especificada no existe o no es un repositorio git.");
 		}
@@ -131,7 +124,7 @@ class Repository extends Component {
 	/**
 	 * Obtiene la informacion detallada de un commit
 	 */
-	public function getRevListHashDetail($hash = 'HEAD',$repository = null) {
+	public function getRevListHashDetail($hash = 'HEAD', $repository = null) {
 		$pattern = '/^(author|committer) ([^<]+) <([^>]*)> ([0-9]+) (.*)$/';
 		$info = array();
 		$info['h'] = $hash;
@@ -143,7 +136,7 @@ class Repository extends Component {
 		$output = $this->run_git("rev-list --date=raw --pretty=format:'tree %T %nparent %P %nauthor %an <%ae> %ad %ncommitter %cn <%ce> %cd %nsubject %s %n%B ' --max-count=1 $hash", $repository);
 		foreach ($output as $line) {
 			if (substr($line, 0, 7)=='commit ') {
-				$info['h'] = substr($line,7);
+				$info['h'] = substr($line, 7);
 			} elseif (substr($line, 0, 4) === 'tree') {
 				$info['tree'] = substr($line, 5);
 			} elseif (substr($line, 0, 6) === 'parent') {
@@ -163,18 +156,18 @@ class Repository extends Component {
 					$info[$matches[1] .'_mail'] = $conf['mail_filter']($info[$matches[1] .'_mail']);
 				}
 			} elseif (substr($line, 0, 7) == 'subject') {
-				strlen($line)>=$this->subject_max_len?$info['subject'] = substr($line, 8, $this->subject_max_len).'...':$info['subject'] = substr($line, 8);
+				strlen($line)>=$this->subjectMaxLength?$info['subject'] = substr($line, 8, $this->subjectMaxLength).'...':$info['subject'] = substr($line, 8);
 			} else {
 				$info['message'] .= $line.' <br>';
 			}
 		}
 		if (array_key_exists('author_stamp', $info)) {
-			$info['author_datetime'] = strftime($this->datetime, $info['author_utcstamp']);
-			$info['author_datetime_local'] = strftime($this->datetime, $info['author_stamp']) .' '. $info['author_timezone'];
+			$info['author_datetime'] = strftime($this->datetimeFormat, $info['author_utcstamp']);
+			$info['author_datetime_local'] = strftime($this->datetimeFormat, $info['author_stamp']) .' '. $info['author_timezone'];
 		}
 		if (array_key_exists('committer_stamp', $info)) {
-			$info['committer_datetime'] = strftime($this->datetime, $info['committer_utcstamp']);
-			$info['committer_datetime_local'] = strftime($this->datetime, $info['committer_stamp']) .' '. $info['committer_timezone'];
+			$info['committer_datetime'] = strftime($this->datetimeFormat, $info['committer_utcstamp']);
+			$info['committer_datetime_local'] = strftime($this->datetimeFormat, $info['committer_stamp']) .' '. $info['committer_timezone'];
 		}
 		return $info;
 	}
@@ -239,7 +232,7 @@ class Repository extends Component {
 							[$parts[1], 'id' => $this->repository, 'hash' => $hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2]],
 						    ['title' => Yii::t('app', 'Detail')]
 						),
-					//'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repository_path, "hash"=>$hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2])).'">Ver</a>',
+					//'<a href="'.Yii::app()->createUrl("repositorio/".$parts[1],array("id"=>$this->repositoryPath, "hash"=>$hash, $parts[1]=="tree"?"tree":"hash_file"=>$parts[2])).'">Ver</a>',
 				),
 
 			);
@@ -259,7 +252,7 @@ class Repository extends Component {
 				$cmd .= " --heads";
 		}
 		$result = array();
-		$output = $this->run_git($cmd,$repository_path);
+		$output = $this->run_git($cmd,$repositoryPath);
 		foreach ($output as $line) {
 			// <hash> <ref>
 			$parts = explode(' ', $line, 2);
@@ -463,15 +456,15 @@ class Repository extends Component {
 				$tags['stamp'] = $matches[4] + ((intval($matches[5]) / 100.0) * 3600);
 				$tags['timezone'] = $matches[5];
 				$tags['utcstamp'] = $matches[4];
-				$tags['datetime'] = strftime($this->datetime, $tags['utcstamp']);
-				$tags['datetime_local'] = strftime($this->datetime, $tags['stamp']) .' '. $tags['timezone'];
+				$tags['datetime'] = strftime($this->datetimeFormat, $tags['utcstamp']);
+				$tags['datetime_local'] = strftime($this->datetimeFormat, $tags['stamp']) .' '. $tags['timezone'];
 			} elseif (substr($line, 0, 3) === 'tag') {
 				$tags['tag'] = substr($line, 4);
 			} elseif (!empty($line)) {
 				$tags['message'] .= $line.'<br>';
 			}
 		}
-		$tags['message_short'] =  strlen($tags['message'])>=$this->subject_max_len?substr($tags['message'],0,$this->subject_max_len).'...':$tags['message'];
+		$tags['message_short'] =  strlen($tags['message'])>=$this->subjectMaxLength?substr($tags['message'],0,$this->subject_max_len).'...':$tags['message'];
 		return $tags;
 	}
 	
@@ -516,13 +509,13 @@ class Repository extends Component {
 	 */
 	public function getHooks() {
 		$Hooks = array();
-		if ($dh = opendir($this->cotainer_path.$this->project."/hooks/")) {
-        	while (($file = readdir($dh)) !== false) {
+		if ($dir = opendir($this->cotainerPath.$this->project."/hooks/")) {
+        	while (($file = readdir($dir)) !== false) {
         		if (($file !=='.') && ($file !=='..')) {
-        			$Hooks[] = array('name' => $file, 'contents'=> @file_get_contents($this->cotainer_path.$this->repository_path.'/hooks/'.$file));
+        			$Hooks[] = array('name' => $file, 'contents'=> file_get_contents($this->cotainerPath.$this->repositoryPath.'/hooks/'.$file));
         		}
         	}
-        	closedir($dh);
+        	closedir($dir);
     	}
         return $Hooks;
 	}
@@ -551,9 +544,9 @@ class Repository extends Component {
      */
     public function getConfig($key, $global = false) {
     	if ($global)
-	        $key = $this->run("config --global $key");
+	        $key = $this->run_git("config --global $key");
 		else
-	        $key = $this->run("config $key");
+	        $key = $this->run_git("config $key");
         return $key;
     }
 
@@ -563,38 +556,12 @@ class Repository extends Component {
 	protected function run_git($command, $repository = null) {
 		$output = array();
 		if ($repository == null) {
-			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->repository_path)." $command";
+			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->repositoryPath)." $command";
 		} else {
-			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainer_path . $repository) ." $command";
+			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainerPath . $repository) ." $command";
 		}
 		$ret = 0;
 		exec($cmd, $output, $ret);
 		return $output;
-	}
-
-	/**
-	 * Runs a git command and returns the response
-	 */
-	protected function run($command,$repository_path = null) {
-		$descriptor = array(
-			1 => array('pipe', 'w'),
-			2 => array('pipe', 'w'),
-		);
-		$pipes = array();
-		if ($repository_path == null) {
-			$cmd = $this->gitPath." --git-dir=".escapeshellarg($this->repository_path)." $command";
-		} else {
-			$cmd = $this->gitPath." --git-dir=". escapeshellarg($this->cotainer_path . $repository_path) ." $command";
-		}
-		$resource = proc_open($cmd,$descriptor,$pipes,$this->repository_path);
-		$stdout = stream_get_contents($pipes[1]);
-		$stderr = stream_get_contents($pipes[2]);
-		foreach($pipes as $pipe) {
-			fclose($pipe);
-		}
-		if (trim(proc_close($resource)) && $stderr) {
-			return trim($stderr);
-		}
-		return trim($stdout);
 	}
 }

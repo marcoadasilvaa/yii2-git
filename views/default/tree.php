@@ -5,8 +5,8 @@ use yii\widgets\DetailView;
 
 $this->title = 'Tree';
 $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => substr($git->repository, -4) == ".git"?substr($git->repository, 0,-4):$git->repository, 'url' => ['view', 'id'=>$git->repository]];
-$this->params['breadcrumbs'][] = ['label' => 'Commit: ' . substr($hash, 0, 7), 'url' => ['commitview', 'id'=>$git->repository, 'hash'=>$hash]];
+$this->params['breadcrumbs'][] = ['label' => $git->repository, 'url' => ['view', 'id' => $git->repository]];
+$this->params['breadcrumbs'][] = ['label' => 'Commit ' . substr($hash, 0, 7), 'url' => ['commitview', 'id' => $git->repository, 'hash' => $hash]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'name' => 'tree',
                 'format' => 'html',
                 'value' => Html::a('<span class="">'.$commit["tree"].'</span>', 
-                    ['tree', 'id' => $git->repository, "hash"=>$commit["h"], "tree"=>$commit["tree"]], 
+                    ['tree', 'id' => $git->repository, "hash" => $commit["h"], "tree" => $commit["tree"]], 
                     ['title' => Yii::t('app', 'Summary')]),
             ],
             [                   
@@ -71,4 +71,3 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
  
     echo yii\base\View::render('_files', array('providerFiles' => $providerFiles)); 
-?>

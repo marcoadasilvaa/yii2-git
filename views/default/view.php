@@ -3,15 +3,15 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-$this->title = substr($git->repository, -4) == ".git"?substr($git->repository, 0, -4):$git->repository;
+$this->title = $git->repository;
 $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-    <span><?= Html::a('Gráfica', ['graph'], ['graph', 'id' => $git->repository], ['class' => 'btn btn-success']) ?></span>
-    <span><?= Html::a('Estadisticas', ['stats'], ['stats', 'id' => $git->repository], ['class' => 'btn btn-success']) ?></span>
-    <span><?= Html::a('Configuración', ['config'], ['config', 'id' => $git->repository], ['class' => 'btn btn-success']) ?></span>
+    <?= Html::a('Gráfica', ['graph', 'id' => $git->repository], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('Estadisticas', ['stats', 'id' => $git->repository], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('Configuración', ['config', 'id' => $git->repository], ['class' => 'btn btn-success']) ?>
 </p>
  
 <h1><?= Html::encode($this->title) ?></h1>
@@ -26,31 +26,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'h',
                 'format' => 'html',
-                'label' => 'Código Versión',
+                'label' => 'Commit',
                 'value' => function($data) {
-                    return substr($data['h'], 0, 7).$data['rev'];
+                    return substr($data['h'], 0, 7) . $data['rev'];
                 }
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'author_datetime',
-                'format' => ['datetime', 'php:m/d/Y H:i:s'],
-                'label' => 'Fecha',
+                'format' => ['datetime', 'php:Y-m-d H:M'],
+                'label' => 'Datetime',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'author_name',
-                'label' => 'Autor',
+                'label' => 'Author Name',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'author_mail',
-                'label' => 'Correo',
+                'label' => 'Author Mail',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'subject',
-                'label' => 'Descripción',
+                'label' => 'Subject',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -76,13 +76,12 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'tag',
-                'label' => 'Etiqueta',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'h',
                 'format' => 'html',
-                'label' => 'Código Versión',
+                'label' => 'Commit',
                 'value' => function($data){
                     return substr($data['h'], 0, 7);
                 }
@@ -90,15 +89,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'datetime',
-                'format' => ['datetime', 'php:m/d/Y H:i:s'],
-                'label' => 'Fecha',
+                'format' => ['datetime', 'php:Y-m-d H:M'],
 
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'message_short',
                 'format' => 'html',
-                'label' => 'Mensaje',
+                'label' => 'Message',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -107,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) use ($git) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
                             ['tagview', 'id' => $git->repository, 'tag' => $model["tag"]], 
-                            ['title' => Yii::t('app', 'Detail')]);
+                            ['title' => Yii::t('app', 'Detail of tag ' . $model["tag"])]);
                     },
                 ],
             ],
@@ -124,14 +122,13 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'branch',
-                'label' => 'Rama',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'active',
-                'label' => 'Estatus',
+                'label' => 'Status',
                 'value' => function($data){
-                    return $data['active']?"Activo":"";
+                    return $data['active']?"Active":"";
                 }
             ],
             [
@@ -141,10 +138,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) use ($git) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
                             ['shortlog', 'id' => $git->repository, 'branch' => $model["branch"]], 
-                            ['title' => Yii::t('app', 'Detail')]);
+                            ['title' => Yii::t('app', 'Detail of brach ' . $model["branch"])]);
                     },
                 ],
             ],
         ],
     ]); 
-?>

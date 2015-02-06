@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-$this->title = 'Archivo: '.substr($hash_file, 0, 7);
+$this->title = 'Archivo '.substr($hash_file, 0, 7);
 $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => substr($git->repository, -4) == ".git"?substr($git->repository, 0,-4):$git->repository, 'url' => ['view', 'id'=>$git->repository]];
-$this->params['breadcrumbs'][] = ['label' => 'Commit: '.substr($hash, 0, 7), 'url' =>['commitview', 'id'=>$git->repository, 'hash'=>$hash]];
+$this->params['breadcrumbs'][] = ['label' => $git->repository, 'url' => ['view', 'id' => $git->repository]];
+$this->params['breadcrumbs'][] = ['label' => 'Commit ' . substr($hash, 0, 7), 'url' => ['commitview', 'id' => $git->repository, 'hash' => $hash]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

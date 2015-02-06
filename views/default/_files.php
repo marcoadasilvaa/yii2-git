@@ -11,7 +11,7 @@ use yii\grid\GridView;
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'hash_file',
                 'value' => function ($data) {
-                        return substr($data['hash_file'], 0,7);
+                        return substr($data['hash_file'], 0, 7);
                 }
             ],
             [
@@ -32,7 +32,7 @@ use yii\grid\GridView;
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'size',
                 'value' => function ($data) {
-                    return $data["size"]!='-'?$data['size']." KB":"-";
+                    return $data["size"] != '-'?$data['size'] . " KB":"-";
                 }
             ],
             [
@@ -45,4 +45,3 @@ use yii\grid\GridView;
             ],
         ],
     ]); 
-?>

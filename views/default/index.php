@@ -18,25 +18,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'name',
                 'format' => 'raw',
-                'label' => 'Nombre',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'description',
                 'format' => 'html',
-                'label' => 'Descripción',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'author_datetime',
-                'format' => ['datetime', 'php:m/d/Y H:i:s'],
-                'label' => 'Fecha',
+                'format' => ['datetime', 'php:Y-m-d H:M'],
+                'label' => 'Datetime',
             ],
             [
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'subject',
                 'format' => 'html',
-                'label' => 'Último Mensaje',
+                'label' => 'Last Message',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -52,4 +50,3 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); 
-?>

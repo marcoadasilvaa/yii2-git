@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\data\ArrayDataProvider;
 use markmarco16\git\components\Repository;
+use markmarco16\git\Asset;
 
 class DefaultController extends Controller
 {
@@ -30,7 +31,7 @@ class DefaultController extends Controller
         $providerRevList = new ArrayDataProvider([
             'allModels' => $git->getRevList("--all", 0, 200),
             'sort' => [
-                'attributes' => ['author_name', 'author_datetime'],
+                'attributes' => ['author_name', 'author_datetime', 'author_mail'],
             ],
             'pagination' => [
                 'pageSize' => 25,
@@ -59,8 +60,9 @@ class DefaultController extends Controller
 
     public function actionGraph($id)
     {
-        echo "Graph";
-        die();
+        $git = new Repository($id);
+        $graph = $git->showGraphLog();
+        return $this->render('graph',array('git'=>$git, 'graph'=>$graph));
     }
 
     public function actionCommitview($id, $hash, $hash_file = null)
@@ -70,7 +72,7 @@ class DefaultController extends Controller
         $providerFiles = new ArrayDataProvider([
             'allModels' => $git->getChangedPaths($hash),
             'sort' => [
-                'attributes' => ['hash_file', 'name', 'type', 'mode', 'size', 'link'],
+                'attributes' => ['name', 'type', 'mode', 'size'],
             ],
             'pagination' => false,
         ]);
@@ -96,10 +98,25 @@ class DefaultController extends Controller
         $providerFiles = new ArrayDataProvider([
             'allModels' => $git->getTree($tree,$hash),
             'sort' => [
-                'attributes' => ['hash_file', 'name', 'type', 'mode', 'size', 'link'],
+                'attributes' => ['name', 'type', 'mode', 'size'],
             ],
             'pagination' => false,
         ]);
         return $this->render('tree', array('git' => $git, 'hash' => $hash, 'commit' => $commit, 'providerFiles' => $providerFiles));
+    }
+
+    public function actionShortlog($id, $branch)
+    {
+        $git = new Repository ($id);
+        $providerRevList = new ArrayDataProvider([
+            'allModels' => $git->getRevList($branch, 0, 200),
+            'sort' => [
+                'attributes' => ['author_name', 'author_datetime', 'author_mail'],
+            ],
+            'pagination' => [
+                'pageSize' => 25,
+            ],
+        ]);
+        return $this->render('shortlog',array('git'=>$git, 'branch'=>$branch, 'providerRevList'=>$providerRevList));
     }
 }

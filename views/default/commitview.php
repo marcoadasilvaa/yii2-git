@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-$this->title = 'Commit: '.substr($hash, 0, 7);
+$this->title = 'Commit ' . substr($hash, 0, 7);
 $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => substr($git->repository, -4) == ".git"?substr($git->repository, 0,-4):$git->repository, 'url' => ['view', 'id'=>$git->repository]];
+$this->params['breadcrumbs'][] = ['label' => $git->repository, 'url' => ['view', 'id' => $git->repository]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -50,16 +50,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [                   
                 'label' => 'Message',
                 'format' => 'html',
-                'name' => 'message',
-                'value' => '<p>'.$changed["message"].'</p>',
+                'attribute' => 'message',
+                'value' => '<p>' . $changed["message"] . '</p>',
             ],
             [                   
                 'label' => 'Files',
-                'name' => 'tree',
+                'attribute' => 'tree',
                 'format' => 'html',
-                'value' => Html::a('<span class="">'.$changed["tree"].'</span>', 
-                	['tree', 'id' => $git->repository, "hash"=>$changed["h"], "tree"=>$changed["tree"]], 
-                	['title' => Yii::t('app', 'Summary')]),
+                'value' => Html::a('<span class="">' . $changed["tree"] . '</span>', 
+                	['tree', 'id' => $git->repository, "hash" => $changed["h"], "tree" => $changed["tree"]], 
+                	['title' => Yii::t('app', 'Files')]),
             ],
             [                   
                 'label' => 'Parent(s)',
@@ -73,5 +73,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
     if (!empty($files_change)) {
         echo yii\base\View::render('_diff', array('files_change'=>$files_change));
-    } 
-?>
+    }
