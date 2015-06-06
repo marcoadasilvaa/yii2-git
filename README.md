@@ -66,5 +66,5 @@ Configura este módulo en la configuracion de tu aplicación Yii
 * Visualización de archivos binarios como PNG.
 * Modificar Enlaces Yii::t, Html::a.
 * Error getRev de un commit, retorna: esoriginHEAD.
-* Hbailitar la descarga de archivos.
+* Habilitar la descarga de archivos.
 * Verificar Asset del modulo y estilos.

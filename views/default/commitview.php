@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'label' => 'Ref',
                 'format' => 'raw',
-                'value' => empty($data["rev"])?"Nothing":strip_tags($data["rev"], '<span>'),
+                'value' => empty($changed["rev"])?"Nothing":strip_tags($changed["rev"], '<span>'),
             ],
             [                   
                 'label' => 'Author Datetime',
@@ -51,20 +51,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Message',
                 'format' => 'html',
                 'attribute' => 'message',
-                'value' => '<p>' . $data["message"] . '</p>',
+                'value' => '<p>' . $changed["message"] . '</p>',
             ],
             [                   
                 'label' => 'Files',
                 'attribute' => 'tree',
                 'format' => 'html',
-                'value' => Html::a('<span class="">' . $data["tree"] . '</span>', 
-                	['tree', 'id' => $git->repository, "hash" => $data["h"], "tree" => $data["tree"]], 
+                'value' => Html::a('<span class="">' . $changed["tree"] . '</span>', 
+                	['tree', 'id' => $git->repository, "hash" => $changed["h"], "tree" => $changed["tree"]], 
                 	['title' => Yii::t('app', 'Files')]),
             ],
             [                   
                 'label' => 'Parent(s)',
                 'format' => 'html',
-                'value' => implode("<br>", $data["parents"]),
+                'value' => implode("<br>", $changed["parents"]),
             ],
         ],
     ]);
