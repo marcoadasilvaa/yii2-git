@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'label' => 'Ref',
                 'format' => 'raw',
-                'value' => empty($changed["rev"])?"Nothing":strip_tags($changed["rev"], '<span>'),
+                'value' => empty($changed["rev"])?"Nothing":$changed["rev"],
             ],
             [                   
                 'label' => 'Author Datetime',

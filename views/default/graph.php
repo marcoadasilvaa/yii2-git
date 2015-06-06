@@ -7,7 +7,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Repositories', 'url' => ['index']]
 $this->params['breadcrumbs'][] = ['label' => $git->repository, 'url' => ['view', 'id' => $git->repository]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
  
 	<h1><?= Html::encode($this->title) ?></h1>
 

@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    
     <?= DetailView::widget([
         'model' => $commit,
         'attributes' => [
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [                   
                 'label' => 'Ref',
                 'format' => 'html',
-                'value'=> empty($data["rev"])?"Nothing":strip_tags($commit["rev"], '<span>'),
+                'value'=> empty($commit["rev"])?"Nothing":strip_tags($commit["rev"], '<span>'),
             ],
             [                   
                 'label' => 'Author Datetime',
@@ -52,20 +52,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Message',
                 'format' => 'html',
                 'name' => 'message',
-                'value' => '<p>' . $data["message"] . '</p>',
+                'value' => '<p>' . $commit["message"] . '</p>',
             ],
             [                   
                 'label' => 'Files',
                 'name' => 'tree',
                 'format' => 'html',
-                'value' => Html::a('<span class="">' . $data["tree"] . '</span>', 
-                    ['tree', 'id' => $git->repository, "hash" => $data["h"], "tree" => $data["tree"]],
+                'value' => Html::a('<span class="">' . $commit["tree"] . '</span>', 
+                    ['tree', 'id' => $git->repository, "hash" => $commit["h"], "tree" => $commit["tree"]],
                     ['title' => Yii::t('app', 'Summary')]),
             ],
             [                   
                 'label' => 'Parent(s)',
                 'format' => 'html',
-                'value' => implode("<br>", $data["parents"]),
+                'value' => implode("<br>", $commit["parents"]),
             ],
         ],
     ]);

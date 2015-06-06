@@ -11,7 +11,7 @@ use yii\grid\GridView;
                 'class' => 'yii\grid\DataColumn',
                 'attribute' => 'hash_file',
                 'value' => function ($data) {
-                        return substr($data['hash_file'], 0, 7);
+                    return substr($data['hash_file'], 0, 7);
                 }
             ],
             [
@@ -40,7 +40,7 @@ use yii\grid\GridView;
                 'format' => 'html',
                 'attribute' => 'link',
                 'value' => function ($data){
-                        return implode(" ", $data["link"]);
+                    return implode(" ", $data["link"]);
                 }
             ],
         ],

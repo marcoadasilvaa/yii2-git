@@ -10,6 +10,13 @@ use markmarco16\git\Asset;
 
 class DefaultController extends Controller
 {
+
+    public function init()
+    {
+        parent::init();
+        \markmarco16\git\Asset::register($this->view);
+    }
+
     public function actionIndex()
     {
         $git = new Repository();

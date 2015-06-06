@@ -12,9 +12,9 @@ use Yii;
 
 class Repository extends Component {
 
-	public $cotainerPath = '/home/marcodasilva/Git/';
-	
 	public $repository;
+	
+	protected $cotainerPath;
 
 	protected $repositoryPath;
 	
@@ -22,19 +22,21 @@ class Repository extends Component {
 	protected $repositoriesList = array();
 
 	//Longitud maxima de mensaje resumen
-	protected $subjectMaxLength = 80;
+	protected $subjectMaxLength;
 
 	//Formato de la fecha corta
-	protected $datetimeFormat = '%Y-%m-%d %H:%M';
-	
+	protected $datetimeFormat;
 	
 	//Prefijo de ejecutable GIT
-	public $gitPath = "git";
+	protected $gitPath = "git";
 
 	/**
 	 * Construct
 	 */
 	public function __construct($repository = null)	{
+		$this->cotainerPath = Yii::$app->getModule('git')->gitDir;
+		$this->datetimeFormat = Yii::$app->getModule('git')->datetimeFormat;
+		$this->subjectMaxLength = Yii::$app->getModule('git')->subjectMaxLength;
 		if ($repository == null) {
 			$this->setRepositoryList();
 		} else {
@@ -276,9 +278,13 @@ class Repository extends Component {
 			if ($part[0]==$hash) {
 				$name = str_replace(array('refs/', '^{}'), array('', ''), $part[1]);
 				if (substr($name, 0, 4)=="tags") {
-						$type = "tags";
-						$name = str_replace("/","",substr($name,4));
-				} else {
+					$type = "tags";
+					$name = str_replace("/","",substr($name,4));
+				} elseif (substr($name, 0, 7)=="remotes") {
+					$type = "remote";
+					$name = str_replace("/",": ",substr($name,8));
+				}
+				else {
 					$type = "branch";
 					$name = str_replace("/","",substr($name,5));
 				}
@@ -287,7 +293,7 @@ class Repository extends Component {
 		}
 		foreach ($items as $item) {
 			if (!empty($item['type'])) {
-				$result .= "<br><span class='GIT".$item['type']."'>".$item['name']."</span>";
+				$result .= "<span class='git-".$item['type']."'>".$item['name']."</span>";
 			}
 		}
 		return $result;
@@ -300,7 +306,7 @@ class Repository extends Component {
 		$path = $this->showNameHashFile($hash_file);
 		$output = $this->run_git("diff $hash^..$hash -- '$path'");
 		if (empty($output)) {
-			throw new NotFoundHttpException("No se puede mostrar los detalles del archivo: '$path' ($hash_file), en la versión: $hash. Favor notifique al administrador.");
+			throw new NotFoundHttpException("No se puede mostrar los detalles del archivo: '$path' ($hash_file), en la versión: $hash.");
 		} else {
 			return $this->formatDiff($output);
 		}

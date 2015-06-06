@@ -14,9 +14,16 @@ En desarrollo...
 [![Build Status](https://scrutinizer-ci.com/g/markmarco16/yii2-git/badges/build.png?b=master)](https://scrutinizer-ci.com/g/markmarco16/yii2-git/build-status/master)
 [![Dependency Status](https://www.versioneye.com/user/projects/54cfb7793ca0840b19000002/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54cfb7793ca0840b19000002)
 [![Code Climate](https://codeclimate.com/github/markmarco16/yii2-git/badges/gpa.svg)](https://codeclimate.com/github/markmarco16/yii2-git)
-
+[![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](http://www.yiiframework.com/)
 
 ## Instalación
+
+### Requiere
+
+Git
+Yii2
+php
+funcion exec 
 
 ### Composer
 
@@ -47,24 +54,11 @@ Configura este módulo en la configuracion de tu aplicación Yii
     'modules' => [
         'git' => [
             'class' => 'markmarco16\git\Module',
+            'gitDir' => '/var/git/', //Ruta Adsoluta
+            'datetimeFormat' => '%Y-%m-%d %H:%M:%S', //Opcional
+            'subjectMaxLength' => 80, //Opcional
+
         ],
     ],
     ......
 ```
-
-
-## Requerimientos
-
-* Verificar datetime local de los Commits.
-* Iconos en el view _file y el titulo de la tabla.
-* Verificar de los hash commit y files antes de se empleados en el component.
-* Iconos en el view para graficas, estadisticas y configuraciones.
-* Exportar style para diff view.
-* Estables como parametros el directorio raiz de los repositorios.
-* Posible migración de table a GridView de _diff view.
-* Optimizar ArrayDataProvider de getRevList.
-* Visualización de archivos binarios como PNG.
-* Modificar Enlaces Yii::t, Html::a.
-* Error getRev de un commit, retorna: esoriginHEAD.
-* Habilitar la descarga de archivos.
-* Verificar Asset del modulo y estilos.

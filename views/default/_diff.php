@@ -9,17 +9,15 @@
             	<tr>
             		<td colspan='3'><?php echo $files_change['info']; ?></td>
             	</tr>
-
 				<?php if (array_key_exists('contents', $files_change)) {
 					foreach ($files_change['contents'] as $item) { ?>
 						<tr>
-                        	<td class="lineNo"><?php echo $item['lineNumOld']; ?></td>
-                        	<td class="lineNo"><?php echo $item['lineNumNew']; ?></td>
-                        	<td style="width: 100%;"><?php echo $item['lineCode']; ?></td>
+                        	<td class="lineNo"><span><?php echo $item['lineNumOld']; ?></span></td>
+                        	<td class="lineNo"><span><?php echo $item['lineNumNew']; ?></span></td>
+                        	<td style="width: 100%;"><span><?php echo $item['lineCode']; ?></span></td>
                        	</tr>
                	<?php   } 
 				} ?>
-				
             </tbody>
 		</table>
 	</div>
