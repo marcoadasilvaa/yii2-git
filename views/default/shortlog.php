@@ -16,7 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $providerRevList,
         'columns' => [
             [
-                'class' => 'yii\grid\DataColumn',
                 'attribute' => 'h',
                 'format' => 'html',
                 'label' => 'Commit',

@@ -165,11 +165,11 @@ class Repository extends Component {
 		}
 		if (array_key_exists('author_stamp', $info)) {
 			$info['author_datetime'] = strftime($this->datetimeFormat, $info['author_utcstamp']);
-			$info['author_datetime_local'] = strftime($this->datetimeFormat, $info['author_stamp']) .' '. $info['author_timezone'];
+			$info['author_datetime_local'] = strftime($this->datetimeFormat, $info['author_stamp']);
 		}
 		if (array_key_exists('committer_stamp', $info)) {
 			$info['committer_datetime'] = strftime($this->datetimeFormat, $info['committer_utcstamp']);
-			$info['committer_datetime_local'] = strftime($this->datetimeFormat, $info['committer_stamp']) .' '. $info['committer_timezone'];
+			$info['committer_datetime_local'] = strftime($this->datetimeFormat, $info['committer_stamp']);
 		}
 		return $info;
 	}
@@ -497,7 +497,7 @@ class Repository extends Component {
 	 * Graficar el log de un repositorio comands git
 	 */
 	public function showGraphLog() {
-		$command = "log --graph --abbrev-commit --decorate --format=format:'<a href=?hash=%H><b>%h</b></a> - <font color=blue>%aD (%ar)</font> <span class=GITref>%d</span>%n''          <i>%s</i> - <b>%an</b>' --all";
+		$command = "log --graph --abbrev-commit --decorate --format=format:'<a href=commitview?id=$this->repository&hash=%H><b>%h</b></a> - <font color=blue>%aD (%ar)</font> <span class=git-ref>%d</span>%n''          <i>%s</i> - <b>%an</b>' --all";
 		$output = $this->run_git($command);
 		return implode("\n", $output);
 	}

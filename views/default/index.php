@@ -13,25 +13,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'git-grid',
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
             [
-                'class' => 'yii\grid\DataColumn',
+                'class' => 'yii\grid\SerialColumn'
+            ],
+            [
                 'attribute' => 'name',
                 'format' => 'raw',
             ],
             [
-                'class' => 'yii\grid\DataColumn',
                 'attribute' => 'description',
                 'format' => 'html',
             ],
             [
-                'class' => 'yii\grid\DataColumn',
                 'attribute' => 'author_datetime',
                 'format' => ['datetime', 'php:Y-m-d H:M'],
                 'label' => 'Datetime',
             ],
             [
-                'class' => 'yii\grid\DataColumn',
                 'attribute' => 'subject',
                 'format' => 'html',
                 'label' => 'Last Message',

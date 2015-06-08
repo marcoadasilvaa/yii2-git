@@ -57,7 +57,6 @@ Configura este módulo en la configuracion de tu aplicación Yii
             'gitDir' => '/var/git/', //Ruta Adsoluta
             'datetimeFormat' => '%Y-%m-%d %H:%M:%S', //Opcional
             'subjectMaxLength' => 80, //Opcional
-
         ],
     ],
     ......

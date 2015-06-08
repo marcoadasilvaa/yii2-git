@@ -11,70 +11,15 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= DetailView::widget([
-    	'model' => $commit,
-        'attributes' => [
-            [                   
-                'label' => 'Commit',
-                'attribute' => 'h'
-            ],
-            [                   
-                'label' => 'Ref',
-                'format' => 'html',
-                'value'=> empty($commit["rev"])?"Nothing":strip_tags($commit["rev"], '<span>'),
-            ],
-            [                   
-                'label' => 'Author Datetime',
-                'attribute' => 'author_datetime'
-            ],
-            [                   
-                'label' => 'Author Name',
-                'attribute' => 'author_name'
-            ],
-            [                   
-                'label' => 'Author Mail',
-                'attribute' => 'author_mail'
-            ],
-            [                   
-                'label' => 'Committer Datetime',
-                'attribute' => 'committer_datetime'
-            ],
-            [                   
-                'label' => 'Committer Name',
-                'attribute' => 'committer_name'
-            ],
-            [                   
-                'label' => 'Committer Mail',
-                'attribute' => 'committer_mail'
-            ],
-            [                   
-                'label' => 'Message',
-                'format' => 'html',
-                'name' => 'message',
-                'value' => '<p>'.$commit["message"].'</p>',
-            ],
-            [                   
-                'label' => 'Files',
-                'name' => 'tree',
-                'format' => 'html',
-                'value' => Html::a('<span class="">' . $commit["tree"] . '</span>', 
-                	['tree', 'id' => $git->repository, "hash" => $commit["h"], "tree" => $commit["tree"]], 
-                	['title' => Yii::t('app', 'Summary')]),
-            ],
-            [                   
-                'label' => 'Parent(s)',
-                'format' => 'html',
-                'value' => implode("<br>", $commit["parents"]),
-            ],
-       	],
-    ]);
+    
+    <?php
+        echo yii\base\View::render('_commit', array('commit'=>$commit, 'git'=>$git));
     ?>
 
     <div class="git-source-view">
     	<div class="git-source-header">
     		<div class="meta"><?php echo $file['name']; ?></div>
-    		<div class="btn-group pull-right"></div>
+    		<div class="btn-group pull-right">Download</div>
     	</div>
     	<div>
             <table>
