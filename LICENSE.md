@@ -1,9 +1,9 @@
 The yii2-Git is free software. It is released under the terms of 
 the following BSD License.
 
-Copyright © 2014 by Marco Da Silva All rights reserved.
+Copyright © 2016 by Marco Da Silva All rights reserved.
 
-RRedistribution and use in source and binary forms, with or without
+Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
 

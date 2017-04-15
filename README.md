@@ -5,9 +5,9 @@ Módulo que permitirá visualizar repositorios GIT utilizando Yii Framework.
 
 En desarrollo...
 
-[![Latest Stable Version](https://poser.pugx.org/markmarco16/yii2-git/v/stable.svg)](https://packagist.org/packages/markmarco16/yii2-git) 
+[![Latest Stable Version](https://poser.pugx.org/markmarco16/yii2-git/v/stable.svg)](https://packagist.org/packages/markmarco16/yii2-git)
+[![Latest Unstable Version](https://poser.pugx.org/markmarco16/yii2-git/v/unstable.svg)](https://packagist.org/packages/markmarco16/yii2-git)
 [![Total Downloads](https://poser.pugx.org/markmarco16/yii2-git/downloads.svg)](https://packagist.org/packages/markmarco16/yii2-git) 
-[![Latest Unstable Version](https://poser.pugx.org/markmarco16/yii2-git/v/unstable.svg)](https://packagist.org/packages/markmarco16/yii2-git) 
 [![License](https://poser.pugx.org/markmarco16/yii2-git/license.svg)](https://packagist.org/packages/markmarco16/yii2-git)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/markmarco16/yii2-git/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/markmarco16/yii2-git/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/markmarco16/yii2-git/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/markmarco16/yii2-git/?branch=master)
